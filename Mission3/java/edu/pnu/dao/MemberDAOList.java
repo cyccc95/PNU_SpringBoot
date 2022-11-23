@@ -27,10 +27,9 @@ public class MemberDAOList implements MemberDAOInterface {
 		return memberList;
 	}
 	
-	public MemberVO getMember(Integer id) {
-		String str = Integer.toString(id);
+	public MemberVO getMember(String id) {
 		for(int i = 0; i < memberList.size(); i++) {
-			if(memberList.get(i).getId().equals(str)) {
+			if(memberList.get(i).getId().equals(id)) {
 				return memberList.get(i);
 			}
 		}
@@ -58,9 +57,9 @@ public class MemberDAOList implements MemberDAOInterface {
 	}
 
 	@Override
-	public MemberVO updateMember(Integer id) {
+	public MemberVO updateMember(String id) {
 		for (int i = 0; i < memberList.size(); i++) {
-			if (memberList.get(i).getId().equals(Integer.toString(id))) {
+			if (memberList.get(i).getId().equals(id)) {
 				memberList.get(i).setName(memberList.get(i).getName() + " " + memberList.get(i).getName());
 				memberList.get(i).setPass(memberList.get(i).getPass() + " " + memberList.get(i).getPass());
 				return memberList.get(i);
@@ -69,10 +68,9 @@ public class MemberDAOList implements MemberDAOInterface {
 		return null;
 	}
 	
-	public MemberVO removeMember(Integer id) {
-		String str = Integer.toString(id);
+	public MemberVO removeMember(String id) {
 		for(int i = 0; i < memberList.size(); i++) {
-			if(memberList.get(i).getId().equals(str)) {
+			if(memberList.get(i).getId().equals(id)) {
 				MemberVO remove = memberList.get(i);
 				memberList.remove(i);
 				return remove;
@@ -83,6 +81,12 @@ public class MemberDAOList implements MemberDAOInterface {
 
 	@Override
 	public String getSql() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public MemberVO addMember(String id, String pass, String name) {
 		// TODO Auto-generated method stub
 		return null;
 	}

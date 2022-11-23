@@ -28,22 +28,22 @@ public class MemberController {
 	}
 	
 	@GetMapping("/mission3/{id}")
-	public MemberVO getMember(@PathVariable Integer id) {
+	public MemberVO getMember(@PathVariable String id) {
 		return m.getMember(id);
 	}
 	
 	@PostMapping("/mission3")
-	public MemberVO addMember() {
-		return m.addMember();
+	public MemberVO addMember(String id, String pass, String name) {
+		return m.addMember(id, pass, name);
 	}
 	
 	@PutMapping("/mission3/{id}")
-	public MemberVO updateMember(@PathVariable Integer id) {
+	public MemberVO updateMember(@PathVariable String id) {
 		return m.updateMember(id);
 	}
 	
 	@DeleteMapping("/mission3/{id}")
-	public MemberVO removeMember(@PathVariable Integer id) {
+	public MemberVO removeMember(@PathVariable String id) {
 		return m.removeMember(id);
 	}
 	

@@ -8,13 +8,13 @@ public interface MemberDAOInterface {
 
 	List<MemberVO> getMembers();
 
-	MemberVO getMember(Integer id);
+	MemberVO getMember(String id);
 
-	MemberVO addMember();
+	MemberVO addMember(String id, String pass, String name);
 
-	MemberVO updateMember(Integer id);
+	MemberVO updateMember(String id);
 
-	MemberVO removeMember(Integer id);
+	MemberVO removeMember(String id);
 	
 	String getSql();
 }

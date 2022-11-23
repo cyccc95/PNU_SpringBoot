@@ -3,21 +3,29 @@ package edu.pnu.domain;
 import java.util.Date;
 
 public class LogVO {
-	private Integer num;
-	private String query;
+	private Integer id;
+	private String method;
+	private String sqlstring;
 	private Date regidate;
+	private boolean success;
 	
-	public Integer getNum() {
-		return num;
+	public Integer getId() {
+		return id;
 	}
-	public void setNum(Integer num) {
-		this.num = num;
+	public void setId(Integer id) {
+		this.id = id;
 	}
-	public String getQuery() {
-		return query;
+	public String getMethod() {
+		return method;
 	}
-	public void setQuery(String query) {
-		this.query = query;
+	public void setMethod(String method) {
+		this.method = method;
+	}
+	public String getSqlstring() {
+		return sqlstring;
+	}
+	public void setSqlstring(String sqlstring) {
+		this.sqlstring = sqlstring;
 	}
 	public Date getRegidate() {
 		return regidate;
@@ -25,5 +33,10 @@ public class LogVO {
 	public void setRegidate(Date regidate) {
 		this.regidate = regidate;
 	}
-	
+	public boolean isSuccess() {
+		return success;
+	}
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
 }

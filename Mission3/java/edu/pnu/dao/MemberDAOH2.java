@@ -11,21 +11,24 @@ import edu.pnu.jdbc.JDBConnect;
 
 public class MemberDAOH2 extends JDBConnect implements MemberDAOInterface{
 	private List<MemberVO> memberList;
-	String query;
+	private String query;
 	
 	public MemberDAOH2() {
 		super("org.h2.Driver", "jdbc:h2:tcp://localhost/~/test", "sa", "");
-		memberList = new ArrayList<>();
-		
+	}
+
+	@Override
+	public List<MemberVO> getMembers() {
 		try {
 			query = "select * from member";
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(query);
+			memberList = new ArrayList<>();
 			while(rs.next()) {
 				MemberVO member = new MemberVO();
 				member.setId(rs.getString("id"));
-				member.setName(rs.getString("name"));
 				member.setPass(rs.getString("pass"));
+				member.setName(rs.getString("name"));
 				member.setRegidate(rs.getDate("regidate"));
 				memberList.add(member);
 			}
@@ -34,93 +37,85 @@ public class MemberDAOH2 extends JDBConnect implements MemberDAOInterface{
 		} catch (SQLException e) {
 			System.out.println("멤버 목록을 가져오는 중 예외 발생");
 			e.printStackTrace();
+			return null;
 		}
-	}
-
-	@Override
-	public List<MemberVO> getMembers() {
-		query = "select * from member";
 		return memberList;
 	}
 	
 	@Override
-	public MemberVO getMember(Integer id) {
+	public MemberVO getMember(String id) {
+		MemberVO member = new MemberVO();
 		try {
-			query = "select * from member where id=" + Integer.toString(id);
+			query = String.format("select * from member where id='%s'",id);
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(query);
-			for(int i = 0; i < memberList.size(); i++) {
-				if(memberList.get(i).getId().equals(Integer.toString(id))) {
-					return memberList.get(i);
-				}
+			while(rs.next()) {
+				member.setId(rs.getString("id"));
+				member.setPass(rs.getString("pass"));
+				member.setName(rs.getString("name"));
+				member.setRegidate(rs.getDate("regidate"));
 			}
 		} catch (SQLException e) {
 			System.out.println("멤버를 가져오는 중 예외 발생");
 			e.printStackTrace();
+			return null;
 		}
-		return null;
-	}
-	
-	int maxId = 0;
-	public int getMaxId() {
-		for(int i = 0; i < memberList.size(); i++) {
-			if(Integer.parseInt(memberList.get(i).getId()) > maxId) {
-				maxId = Integer.parseInt(memberList.get(i).getId());
-			}
-		}
-		return maxId;
+		if(member.getId() == null) return null;
+		return member;
 	}
 	
 	@Override
-	public MemberVO addMember() {
-		MemberVO memberVO = new MemberVO();
-		memberVO.setId(Integer.toString(this.getMaxId() + 1));
-		memberVO.setName("musthave" + Integer.toString(this.getMaxId() + 1));
-		memberVO.setPass("1234");
-		memberVO.setRegidate(new Date());
-		memberList.add(memberVO);
+	public MemberVO addMember(String id, String pass, String name) {
+		MemberVO member = new MemberVO();
 		try {
-			query = "insert into member (id, pass, name) values (" + memberVO.getId() + ", "
-					+ memberVO.getPass() + ", " + memberVO.getName() + ")";
+			member.setId(id);
+			member.setPass(pass);
+			member.setName(name);
+			member.setRegidate(new Date());
+			query = String.format("insert into member (id, pass, name)"
+					+ " values ('%s','%s','%s')", id, pass, name);
 			stmt = con.createStatement();
 			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.println("멤버를 추가하는 중 예외 발생");
 			e.printStackTrace();
+			return null;
 		}
-		return memberVO;
+		if(member.getId() == null) return null;
+		return member;
 	}
 	
 	@Override
-	public MemberVO updateMember(Integer id) {
-		MemberVO updateMember = memberList.get(id - 1);
-		String newName = updateMember.getName() + " " + updateMember.getName();
-		updateMember.setName(newName);
-		memberList.set(id - 1, updateMember);
+	public MemberVO updateMember(String id) {
+		MemberVO member = getMember(id);
 		try {
-			query = "update member set name=" + newName + " where id=" + Integer.toString(id);
+			member.setName(member.getName() + member.getName());
+			query = String.format("update member set name= '%s' where id='%s'", member.getName(), id);
 			stmt = con.createStatement();
 			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.println("멤버를 수정하는 중 예외 발생");
 			e.printStackTrace();
+			return null;
 		}
-		return updateMember;
+		if(member.getId() == null) return null;
+		return member;
 	}
 	
 	@Override
-	public MemberVO removeMember(Integer id) {
-		MemberVO removeMember = memberList.get(id - 1);
-		memberList.remove(id - 1);
+	public MemberVO removeMember(String id) {
+		MemberVO member = getMember(id);
 		try {
-			query = "delete from member where id=" + Integer.toString(id);
+			query = String.format("delete from member where id='%s'", id);
 			stmt = con.createStatement();
 			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.println("멤버를 삭제하는 중 예외 발생");
 			e.printStackTrace();
+			return null;
 		}
-		return removeMember;
+		if(member.getId() == null) return null;
+		return member;
 	}
 
 	@Override

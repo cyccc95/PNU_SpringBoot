@@ -28,36 +28,51 @@ public class MemberService implements MemberDAOInterface, LogInterface {
 	@Override
 	public List<MemberVO> getMembers() {
 		list = dao.getMembers();
-		log.addLog(dao.getSql());
-		return list;
+		if(list.isEmpty()) {
+			log.addLog("GET", dao.getSql(), false); return null;
+		} else {
+			log.addLog("GET", dao.getSql(), true); return list;
+		}
 	}
 
 	@Override
-	public MemberVO getMember(Integer id) {
+	public MemberVO getMember(String id) {
 		memberVO = dao.getMember(id);
-		log.addLog(dao.getSql());
-		return memberVO;
+		if(memberVO == null) {
+			log.addLog("GET", dao.getSql(), false); return null;
+		} else {
+			log.addLog("GET", dao.getSql(), true); return memberVO;
+		}
 	}
 
 	@Override
-	public MemberVO addMember() {
-		memberVO = dao.addMember();
-		log.addLog(dao.getSql());
-		return memberVO;
+	public MemberVO addMember(String id, String pass, String name) {
+		memberVO = dao.addMember(id, pass, name);
+		if(memberVO == null) {
+			log.addLog("POST", dao.getSql(), false); return null;
+		} else {
+			log.addLog("POST", dao.getSql(), true); return memberVO;
+		}
 	}
 
 	@Override
-	public MemberVO updateMember(Integer id) {
+	public MemberVO updateMember(String id) {
 		memberVO = dao.updateMember(id);
-		log.addLog(dao.getSql());
-		return memberVO;
+		if(memberVO == null) {
+			log.addLog("PUT", dao.getSql(), false); return null;
+		} else {
+			log.addLog("PUT", dao.getSql(), true); return memberVO;
+		}
 	}
 
 	@Override
-	public MemberVO removeMember(Integer id) {
+	public MemberVO removeMember(String id) {
 		memberVO = dao.removeMember(id);
-		log.addLog(dao.getSql());
-		return memberVO;
+		if(memberVO == null) {
+			log.addLog("DELETE", dao.getSql(), false); return null;
+		} else {
+			log.addLog("DELETE", dao.getSql(), true); return memberVO;
+		}
 	}
 
 	@Override
@@ -71,8 +86,8 @@ public class MemberService implements MemberDAOInterface, LogInterface {
 	}
 
 	@Override
-	public LogVO addLog(String logQuery) {
-		return log.addLog(logQuery);
+	public LogVO addLog(String method, String sqlString, boolean success) {
+		return log.addLog(method, sqlString, success);
 	}
 
 }

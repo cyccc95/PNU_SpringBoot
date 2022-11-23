@@ -15,16 +15,19 @@ public class LogDAO extends JDBConnect implements LogInterface {
 	
 	public LogDAO() {
 		super("org.h2.Driver", "jdbc:h2:tcp://localhost/~/test", "sa", "");
+	}
+
+	@Override
+	public List<LogVO> getLogs() {
 		logList = new ArrayList<>();
-		
 		try {
-			query = "select * from log";
+			query = "select * from dblog";
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(query);
 			while(rs.next()) {
 				LogVO log = new LogVO();
-				log.setNum(rs.getInt("num"));
-				log.setQuery(rs.getString("query"));
+				log.setId(rs.getInt("num"));
+				log.setSqlstring(query);
 				log.setRegidate(rs.getDate("regidate"));
 				logList.add(log);
 			}
@@ -34,29 +37,22 @@ public class LogDAO extends JDBConnect implements LogInterface {
 			System.out.println("로그 목록을 가져오는 중 예외 발생");
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public List<LogVO> getLogs() {
-		query = "select * from log";
 		return logList;
 	}
 
 	@Override
-	public LogVO addLog(String logQuery) {
-		LogVO logVO = new LogVO();
-		logVO.setNum(logList.size() + 1);
-		logVO.setQuery(logQuery);
-		logVO.setRegidate(new Date());
-		logList.add(logVO);
+	public LogVO addLog(String method, String sqlString, boolean success) {
 		try {
-			query = "insert into log (query) values (\'" + logQuery + "\')";
-			stmt = con.createStatement();
-			stmt.executeUpdate(query);
+			query = "insert into dblog (method, sqlString, success) values (?,?,?)";
+			psmt = con.prepareStatement(query);
+			psmt.setString(1, method);
+			psmt.setString(2, sqlString);
+			psmt.setBoolean(3, success);
+			psmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return logVO;
+		return null;
 	}
 	
 }

@@ -8,5 +8,5 @@ public interface LogInterface {
 	
 	List<LogVO> getLogs();
 	
-	LogVO addLog(String logQuery);
+	LogVO addLog(String method, String sqlString, boolean success);
 }
