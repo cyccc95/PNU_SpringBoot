@@ -13,6 +13,8 @@ import edu.pnu.domain.MemberVO;
 public class MemberService implements MemberDAOInterface, LogInterface {
 	private MemberDAOInterface dao;
 	private LogInterface log;
+	private List<MemberVO> list;
+	private MemberVO memberVO;
 	
 	public MemberService() {
 //		dao = new MemberDAOList();
@@ -25,33 +27,52 @@ public class MemberService implements MemberDAOInterface, LogInterface {
 
 	@Override
 	public List<MemberVO> getMembers() {
-		return dao.getMembers();
+		list = dao.getMembers();
+		log.addLog(dao.getSql());
+		return list;
 	}
 
 	@Override
 	public MemberVO getMember(Integer id) {
-		return dao.getMember(id);
+		memberVO = dao.getMember(id);
+		log.addLog(dao.getSql());
+		return memberVO;
 	}
 
 	@Override
 	public MemberVO addMember() {
-		return dao.addMember();
+		memberVO = dao.addMember();
+		log.addLog(dao.getSql());
+		return memberVO;
 	}
 
 	@Override
 	public MemberVO updateMember(Integer id) {
-		return dao.updateMember(id);
+		memberVO = dao.updateMember(id);
+		log.addLog(dao.getSql());
+		return memberVO;
 	}
 
 	@Override
 	public MemberVO removeMember(Integer id) {
-		return dao.removeMember(id);
+		memberVO = dao.removeMember(id);
+		log.addLog(dao.getSql());
+		return memberVO;
 	}
 
+	@Override
+	public String getSql() {
+		return dao.getSql();
+	}
+	
 	@Override
 	public List<LogVO> getLogs() {
 		return log.getLogs();
 	}
-	
-	
+
+	@Override
+	public LogVO addLog(String logQuery) {
+		return log.addLog(logQuery);
+	}
+
 }

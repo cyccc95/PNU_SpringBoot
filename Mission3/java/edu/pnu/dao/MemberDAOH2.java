@@ -9,15 +9,16 @@ import edu.pnu.domain.MemberVO;
 import edu.pnu.jdbc.JDBConnect;
 
 
-public class MemberDAOH2 extends JDBConnect implements MemberDAOInterface {
+public class MemberDAOH2 extends JDBConnect implements MemberDAOInterface{
 	private List<MemberVO> memberList;
+	String query;
 	
 	public MemberDAOH2() {
 		super("org.h2.Driver", "jdbc:h2:tcp://localhost/~/test", "sa", "");
 		memberList = new ArrayList<>();
 		
 		try {
-			String query = "select * from member";
+			query = "select * from member";
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(query);
 			while(rs.next()) {
@@ -38,13 +39,14 @@ public class MemberDAOH2 extends JDBConnect implements MemberDAOInterface {
 
 	@Override
 	public List<MemberVO> getMembers() {
+		query = "select * from member";
 		return memberList;
 	}
 	
 	@Override
 	public MemberVO getMember(Integer id) {
 		try {
-			String query = "select * from member where id=\'" + Integer.toString(id) + "\'";
+			query = "select * from member where id=" + Integer.toString(id);
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(query);
 			for(int i = 0; i < memberList.size(); i++) {
@@ -78,13 +80,10 @@ public class MemberDAOH2 extends JDBConnect implements MemberDAOInterface {
 		memberVO.setRegidate(new Date());
 		memberList.add(memberVO);
 		try {
-			String query = "insert into member (id, pass, name) values (?,?,?)";
-			psmt = con.prepareStatement(query);
-			psmt.setString(1, memberVO.getId());
-			psmt.setString(2, memberVO.getPass());
-			psmt.setString(3, memberVO.getName());
-			psmt.executeUpdate();
-			psmt.close();
+			query = "insert into member (id, pass, name) values (" + memberVO.getId() + ", "
+					+ memberVO.getPass() + ", " + memberVO.getName() + ")";
+			stmt = con.createStatement();
+			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.println("멤버를 추가하는 중 예외 발생");
 			e.printStackTrace();
@@ -99,12 +98,9 @@ public class MemberDAOH2 extends JDBConnect implements MemberDAOInterface {
 		updateMember.setName(newName);
 		memberList.set(id - 1, updateMember);
 		try {
-			String query = "update member set name=? where id=?";
-			psmt = con.prepareStatement(query);
-			psmt.setString(1, newName);
-			psmt.setString(2, Integer.toString(id));
-			psmt.executeUpdate();
-			psmt.close();
+			query = "update member set name=" + newName + " where id=" + Integer.toString(id);
+			stmt = con.createStatement();
+			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.println("멤버를 수정하는 중 예외 발생");
 			e.printStackTrace();
@@ -117,15 +113,18 @@ public class MemberDAOH2 extends JDBConnect implements MemberDAOInterface {
 		MemberVO removeMember = memberList.get(id - 1);
 		memberList.remove(id - 1);
 		try {
-			String query = "delete from member where id=?";
-			psmt = con.prepareStatement(query);
-			psmt.setString(1, Integer.toString(id));
-			psmt.executeUpdate();
-			psmt.close();
+			query = "delete from member where id=" + Integer.toString(id);
+			stmt = con.createStatement();
+			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.println("멤버를 삭제하는 중 예외 발생");
 			e.printStackTrace();
 		}
 		return removeMember;
+	}
+
+	@Override
+	public String getSql() {
+		return query;
 	}
 }

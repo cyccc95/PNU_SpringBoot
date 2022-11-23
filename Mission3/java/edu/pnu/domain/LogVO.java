@@ -3,22 +3,15 @@ package edu.pnu.domain;
 import java.util.Date;
 
 public class LogVO {
-	private String num;
-	private String type;
+	private Integer num;
 	private String query;
 	private Date regidate;
 	
-	public String getNum() {
+	public Integer getNum() {
 		return num;
 	}
-	public void setNum(String num) {
+	public void setNum(Integer num) {
 		this.num = num;
-	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
 	}
 	public String getQuery() {
 		return query;
@@ -32,4 +25,5 @@ public class LogVO {
 	public void setRegidate(Date regidate) {
 		this.regidate = regidate;
 	}
+	
 }

@@ -15,5 +15,6 @@ public interface MemberDAOInterface {
 	MemberVO updateMember(Integer id);
 
 	MemberVO removeMember(Integer id);
-
+	
+	String getSql();
 }

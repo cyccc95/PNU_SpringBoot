@@ -22,32 +22,32 @@ public class MemberController {
 		System.out.println("MemberController 생성");
 	}
 	
-	@GetMapping("/mission2_1")
+	@GetMapping("/mission3")
 	public List<MemberVO> getMembers(){
 		return m.getMembers();
 	}
 	
-	@GetMapping("/mission2_1/{id}")
+	@GetMapping("/mission3/{id}")
 	public MemberVO getMember(@PathVariable Integer id) {
 		return m.getMember(id);
 	}
 	
-	@PostMapping("/mission2_1")
+	@PostMapping("/mission3")
 	public MemberVO addMember() {
 		return m.addMember();
 	}
 	
-	@PutMapping("/mission2_1/{id}")
+	@PutMapping("/mission3/{id}")
 	public MemberVO updateMember(@PathVariable Integer id) {
 		return m.updateMember(id);
 	}
 	
-	@DeleteMapping("/mission2_1/{id}")
+	@DeleteMapping("/mission3/{id}")
 	public MemberVO removeMember(@PathVariable Integer id) {
 		return m.removeMember(id);
 	}
 	
-	@GetMapping("/mission2_1/log")
+	@GetMapping("/mission3/log")
 	public List<LogVO> getLogs(){
 		return m.getLogs();
 	}
