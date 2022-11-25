@@ -1,95 +1,64 @@
 package edu.pnu.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.pnu.dao.LogInterface;
-import edu.pnu.dao.MemberDAOH2Interface;
-import edu.pnu.domain.LogVO;
+import edu.pnu.dao.log.LogDao;
+import edu.pnu.dao.member.MemberInterface;
 import edu.pnu.domain.MemberVO;
 
 @Service
-public class MemberService implements MemberDAOH2Interface, LogInterface{
-	
-	private MemberDAOH2Interface memberDAO;
-	private LogInterface logDAO;
-	private List<MemberVO> list;
-	private MemberVO member;
-	
-	@Autowired
-	public MemberService(MemberDAOH2Interface memberDAO, LogInterface logDAO) {
-		this.memberDAO = memberDAO;
-		System.out.println("MemberDAOH2 생성");
-		this.logDAO = logDAO;
-		System.out.println("LogDAO 생성");
-	}
-
-	@Override
-	public List<MemberVO> getMembers() {
-		list = memberDAO.getMembers();
-		logDAO.addLog("GET",memberDAO.getSqlString(), true);
-		return list;
-	}
-
-	@Override
-	public MemberVO getMember(Integer id) {
-		member = memberDAO.getMember(id);
-		if(member == null) {
-			logDAO.addLog("GET", memberDAO.getSqlString(), false); return null;
-		} else {
-			logDAO.addLog("GET", memberDAO.getSqlString(), true); return member;
+public class MemberService {
+	 private MemberInterface memberDao;
+	 private LogDao logDao;
+	 
+	 @Autowired
+	 public MemberService(MemberInterface memberDao, LogDao logDao) {
+		 this.memberDao = memberDao;
+		 this.logDao = logDao;
+	 }
+	 
+	 @SuppressWarnings("unchecked")
+		public List<MemberVO> getMembers() {
+			Map<String, Object> map = memberDao.getMembers();
+			List<MemberVO> list = (List<MemberVO>) map.get("data");
+			if (list != null)	logDao.addLog("get", (String)map.get("sql"), true);
+			else				logDao.addLog("get", (String)map.get("sql"), false);
+			return list;
 		}
-	}
 
-	@Override
-	public MemberVO addMember(String name, String pass) {
-		member = memberDAO.addMember(name, pass);
-		if(member == null) {
-			logDAO.addLog("POST", memberDAO.getSqlString(), false); return null;
-		} else {
-			logDAO.addLog("POST", memberDAO.getSqlString(), true); return member;
+		public MemberVO getMember(Integer id) {
+			Map<String, Object> map = memberDao.getMember(id);
+			MemberVO member = (MemberVO) map.get("data");
+			if (member != null)	logDao.addLog("get", (String)map.get("sql"), true);
+			else				logDao.addLog("get", (String)map.get("sql"), false);
+			return member;
 		}
-	}
 
-	@Override
-	public MemberVO updateMember(Integer id, String name, String pass) {
-		member = memberDAO.updateMember(id, name, pass);
-		if(member == null) {
-			logDAO.addLog("PUT", memberDAO.getSqlString(), false); return null;
-		} else {
-			logDAO.addLog("PUT", memberDAO.getSqlString(), true); return member;
+		public MemberVO addMember(MemberVO member) {
+			Map<String, Object> map = memberDao.addMember(member);
+			MemberVO m = (MemberVO) map.get("data");
+			if (m != null)	logDao.addLog("post", (String)map.get("sql"), true);
+			else			logDao.addLog("post", (String)map.get("sql"), false);
+			return m;		
 		}
-	}
 
-	@Override
-	public MemberVO deleteMember(Integer id) {
-		member = memberDAO.deleteMember(id);
-		if(member == null) {
-			logDAO.addLog("DELETE", memberDAO.getSqlString(), false); return null;
-		} else {
-			logDAO.addLog("DELETE", memberDAO.getSqlString(), true); return member;
+		public MemberVO updateMember(MemberVO member) {
+			Map<String, Object> map = memberDao.updateMember(member);
+			MemberVO m = (MemberVO) map.get("data");
+			if (m != null)	logDao.addLog("put", (String)map.get("sql"), true);
+			else			logDao.addLog("put", (String)map.get("sql"), false);	
+			return m;
 		}
-	}
 
-	@Override
-	public Integer getMaxId() {
-		return null;
-	}
-
-	@Override
-	public String getSqlString() {
-		return memberDAO.getSqlString();
-	}
-
-	@Override
-	public List<LogVO> getLogs() {
-		return logDAO.getLogs();
-	}
-
-	@Override
-	public void addLog(String method, String sqlString, boolean success) {
-		
-	}
+		public MemberVO deleteMember(Integer id) {
+			Map<String, Object> map = memberDao.deleteMember(id);
+			MemberVO m = (MemberVO) map.get("data");
+			if (m != null)	logDao.addLog("delete", (String)map.get("sql"), true);
+			else			logDao.addLog("delete", (String)map.get("sql"), false);
+			return m;
+		}
 }
