@@ -27,3 +27,6 @@
 ### Mission6
 + Mission5에서 Jdbc Connection을 만들어서 사용하는 방식을 JdbcTemplate을 이용하는 방식으로 변경
 
+### Mission5JPA
++ Mission5를 JPA로 구현
+
